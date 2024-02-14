@@ -2,9 +2,22 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
+import { BrowserRouter,Routes,Route } from 'react-router-dom'
+
+import{Provider} from "react-redux"
+import store from './utils/ReduxStore/Store/Store.js'
+import { ThemeProvider } from '@material-tailwind/react'
+
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <ThemeProvider>
+       <App/>
+       </ThemeProvider>
+    </Provider>
+   
+ 
   </React.StrictMode>,
 )
