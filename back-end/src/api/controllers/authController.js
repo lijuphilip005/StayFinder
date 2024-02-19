@@ -2,6 +2,7 @@ const { signupHelper,loginHelper, sendOtpHelper}=require('../helpers/authHelper'
 const userModel=require("../models/userModel")
 const jwt=require("jsonwebtoken")
 const bcrypt=require("bcrypt")
+const session = require('express-session')
 
 //sending otp
  const sendOtp=async(req,res)=>{
@@ -9,11 +10,13 @@ const bcrypt=require("bcrypt")
           const response= await sendOtpHelper(req.body)
            req.session.data=req.body
            req.session.otp=response.otp
+           TimeOut(req,res)
             res.status(200).json({message:"Success"})
       }catch(error){
         res.status(400).json({error})
       }
  }
+
  //registering new user
 const registerNewUser= async(req,res,next)=>{
     console.log("register nw user")
@@ -170,51 +173,22 @@ const logout=(req,res)=>{
   
 }
 
-//checkAuthentication
+//
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const TimeOut=(req,res)=>{
+    try{
+        console.log("entered in timeout")
+        
+              setTimeout(()=>{
+                    req.session.otp=null
+                    req.session.save()
+                   console.log("otp is cleared")
+              },1*60*1000)
+    }catch(error){
+        console.log(error)
+    }
+   
+}
 
 
 
@@ -224,5 +198,6 @@ module.exports={
     login,
     refreshToken,
     logout,
+    TimeOut
 
 }

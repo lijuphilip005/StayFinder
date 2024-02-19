@@ -19,19 +19,12 @@ const handleLogOut=()=>{
 
 
 
-
-
-
-
-
-
-
   return (
     <>
   
-<nav className={`fixed top-0 z-10 bg-white w-full flex  justify-between items-center mx-auto px-8 h-20 ${location.pathname==='/signup' ?'hidden':location.pathname==='/login'?'hidden':location.pathname=="/admin/login"?'hidden':location.pathname=="/host/login"?'hidden':location.pathname=="/otp"?'hidden': 'flex'}` }>
+<nav className={`fixed top-0 z-10 bg-white w-full flex justify-between items-center mx-auto px-8 h-20 ${location.pathname==='/signup' ?'hidden':location.pathname==='/login'?'hidden':location.pathname=="/admin/login"?'hidden':location.pathname=="/host/login"?'hidden':location.pathname=="/otp"?'hidden': 'flex'}` }>
 {/* logo */}
-<div className="inline-flex">
+<div className="inline-flex ">
 <a className="_o6689fn" href="/">
   <div className="hidden md:block">
     <div className='mt-7'>
