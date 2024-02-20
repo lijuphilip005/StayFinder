@@ -1,11 +1,41 @@
 import React from 'react'
 import {useState,useEffect} from "react";
-import{useNavigate} from "react-router-dom"
+import{useLocation, useNavigate} from "react-router-dom"
 import axios from 'axios';
 
 
 
 function Otp() {
+
+    const [seconds,setSeconds]=useState(59)
+    const [minute,setMinute]=useState(1)
+    const[resendResponse,setResendResponse]=useState("")
+    const location= useLocation()
+
+
+    useEffect(()=>{
+         const interval=setInterval(()=>{
+              if(seconds>0){
+                setSeconds(seconds-1)
+              }
+         
+         if(seconds==0){
+             if(minute==0){
+                clearInterval(interval)
+             }
+          else{
+             setSeconds(59)
+             setMinute(minute-1)
+         }
+        }
+        },1000)
+         
+         return()=>{
+           clearInterval(interval)
+         }
+    },[seconds])
+
+
   const [error,setError]=useState("")
    const navigate=useNavigate();
    const [otp,setOtp]=useState(Array(4).fill(''))
@@ -41,6 +71,23 @@ function Otp() {
       }
    }
 
+      const data= location.state
+    
+    const handleResendOtp= async()=>{
+          try {
+            setMinute(1);
+            setSeconds(30);
+            const response= await axios.post("http://localhost:5000/auth/send-otp",{data},{withCredentials:true})
+             console.log(response)
+          if(response.status==200){
+            setResendResponse(response.message)
+          }
+            
+          } catch (error) {
+            console.log(error)
+            
+          }       
+    }
 
 
 
@@ -83,6 +130,29 @@ function Otp() {
             ))}
            
           </div>
+              <div className='flex justify-between '>
+                <div className="">
+                 { seconds>0||minute>0?(
+                     <p> Remaining Time:{minute<10?`0${minute}`:minute}:{seconds<10? `0${seconds}`:seconds} </p>
+                 ):null }
+
+
+                </div>
+
+                <div className=''>
+                   
+                   <button className="border-solid border-2 border-sky-500 rounded"  disabled={seconds > 0 || minute > 0}
+        style={{
+          color: seconds > 0 || minute > 0 ? "#DFE3E8" : "#FF5630", }}
+                  onClick={handleResendOtp}>           
+                     Resend Otp
+                   </button>
+
+                </div>
+                <p>{resendResponse} </p>
+              </div>
+
+
           {<p className='text-red-800'>{error}</p>}
           <button
             type="submit"

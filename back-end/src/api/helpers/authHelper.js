@@ -6,10 +6,13 @@ const otpGenerator=require( "otp-generator")
 
  // sending otp
  const sendOtpHelper=async(data)=>{
+           console.log(data,"hrlper")
    try {
-     let otp= await sendMail(data.values.username,data.values.email)
+     let otp= await sendMail(data?.values?.username||data?.data?.values?.username,data?.values?.email||data?.data?.values?.email)
+      console.log(otp,"otp helper")
      return({otp})
   } catch (error) {
+     console.log(error)
      throw new Error(error)
      
 } 
@@ -19,15 +22,15 @@ const otpGenerator=require( "otp-generator")
   // signup helper for creating new user
 
 const signupHelper= async (data)=>{
-        console.log(data)
-      console.log("sign up helper")
+  console.log("sign up helper")
+
      try {
 
           const newUser= new userModel({
-               username:data.values.username,
-               password:data.values.password,
-               phone:data.values.phone,
-               email:data.values.email,
+                username: (data && data.values && data.values.username) || (data?.data?.values?.username),
+               password: (data && data.values && data.values.password) || (data?.data?.values?.password),
+               phone: (data && data.values && data.values.phone) || (data?.data?.values?.phone),
+               email: (data && data.values && data.values.email) || (data?.data?.values?.email),
           })
           console.log(newUser)
           const userData= await newUser.save()

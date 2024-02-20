@@ -18,6 +18,10 @@ function SignUp(role) {
              
           });
 
+          const data={
+            values
+          }
+
       const handleInputChange=(e)=>{
           const{name,value}=e.target;
           setValues((prevValues)=>({
@@ -43,6 +47,7 @@ function SignUp(role) {
 
      const handleFormSubmit= async(e)=>{
        e.preventDefault();
+
        try{
         if (!values.username || !values.email || !values.phone || !values.password ) {
           console.log("Please fill in all required fields");
@@ -51,7 +56,7 @@ function SignUp(role) {
         }
         const response= await axios.post("http://localhost:5000/auth/send-otp",{values} , {withCredentials:true})
         if(response.status == 200){
-          navigate('/otp');
+          navigate('/otp',{state:data});
         }
 
        }catch(error){
@@ -157,8 +162,6 @@ function SignUp(role) {
                 />
               </div>
             </div>
-
-
 
             <div className="flex flex-col mb-5">
               <label

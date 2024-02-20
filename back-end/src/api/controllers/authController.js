@@ -8,10 +8,11 @@ const session = require('express-session')
  const sendOtp=async(req,res)=>{
       try{
           const response= await sendOtpHelper(req.body)
+             console.log(req.body,"data from the state")
            req.session.data=req.body
            req.session.otp=response.otp
            TimeOut(req,res)
-            res.status(200).json({message:"Success"})
+            res.status(200).json({message:"otp send"})
       }catch(error){
         res.status(400).json({error})
       }
@@ -20,6 +21,7 @@ const session = require('express-session')
  //registering new user
 const registerNewUser= async(req,res,next)=>{
     console.log("register nw user")
+    console.log(req.body)
      try{  
 
         const receivedOtp = req.body.otp
@@ -30,6 +32,7 @@ const registerNewUser= async(req,res,next)=>{
         console.log(req.session.otp);
              if(req.session.otp==finalOtp){
                  const response= await signupHelper( req.session.data)
+                  console.log(req.session.data," data in the session")
                  console.log(response,"response after signup")
                  res.status(200).json({response})
              }else{
@@ -173,7 +176,7 @@ const logout=(req,res)=>{
   
 }
 
-//
+// otp timeout
 
 const TimeOut=(req,res)=>{
     try{
@@ -183,12 +186,19 @@ const TimeOut=(req,res)=>{
                     req.session.otp=null
                     req.session.save()
                    console.log("otp is cleared")
-              },1*60*1000)
+              },1.5*60*1000)
     }catch(error){
         console.log(error)
     }
    
 }
+
+
+
+
+
+
+
 
 
 
