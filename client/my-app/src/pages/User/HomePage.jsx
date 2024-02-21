@@ -6,6 +6,10 @@ import axios from 'axios'
 import { Spinner } from '@material-tailwind/react'
 import { useGetHotelsUserQuery } from '@/services/userApiSlice/hotelAplislice'
 
+
+
+
+
 function HomePage() {
     
   const {data:hotels,isLoading}=useGetHotelsUserQuery()
