@@ -19,11 +19,11 @@ function HomePage() {
        
 
   return (
-    <div className='mt-[100px] z-0'>
+    <div className='mt-[100px] z-0 max-w-7xl mx-auto px-4'>
       <div>
     
       </div>
-      <div className='grid grid-cols-3 gap-4 '>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 '>
         {hotels.response.map((hotel,index)=>{
            return  <Cards hotel={hotel}/>
         })}

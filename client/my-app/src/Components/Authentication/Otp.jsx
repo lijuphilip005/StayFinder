@@ -141,7 +141,7 @@ function Otp() {
 
                 <div className=''>
                    
-                   <button className="border-solid  rounded"  disabled={seconds > 0 || minute > 0}
+                   <button className="border-solid border-2 border-sky-500 rounded"  disabled={seconds > 0 || minute > 0}
         style={{
           color: seconds > 0 || minute > 0 ? "#DFE3E8" : "#FF5630", }}
                   onClick={handleResendOtp}>           

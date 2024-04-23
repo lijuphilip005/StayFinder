@@ -1,9 +1,75 @@
-import React from 'react'
+import { useGetUserProfileQuery } from '@/services/userApiSlice/userProfileSlice'
+import { useEditUserDetailsMutation } from '@/services/userApiSlice/userProfileSlice'
+import { userDetails } from '@/utils/ReduxStore/Slices/authSlice'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
+import {Popover,PopoverContent,PopoverTrigger, } from "@/components/ui/popover"
+import { Input } from "@/components/ui/input"
+
+
 
 function UserProfile() {
+    const user=useSelector(userDetails)
+    const {data:userData,isError,isLoading}=useGetUserProfileQuery({ id:user.user._id})
+    const [editUserDetails]=useEditUserDetailsMutation()
+    const [showPopover, setShowPopover] = useState(false);
+
+
+         const [edit,setEdit]= useState({
+            email:user.user.email,
+            username:user.user.username,
+            password:"******"
+         })
+
+
+         const inputChange = (e, field) => {
+            if (e.key === "Backspace") {
+            
+              setEdit((prevEdit) => ({
+                ...prevEdit,
+                [field]: ""
+              }));
+            } else {
+              
+              setEdit((prevEdit) => ({
+                ...prevEdit,
+                [field]: e.target.value
+              }));
+            }
+          };
+
+
+        //   const handleclose = async()=>{
+        //        const response= await editUserDetails.response
+        //         if(response.status==200){
+                     
+        //         }
+                 
+        //   }
+
+      
+        const handlePopoverClose = () => {
+          setShowPopover(false);
+        };
+      
+        const handlePopoverOpen = () => {
+          setShowPopover(true);
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <div>
-
 
 <div className=" ">
   <div className="container mx-auto py-8">
@@ -15,20 +81,20 @@ function UserProfile() {
               src="https://randomuser.me/api/portraits/men/94.jpg"
               className="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0"
             />
-            <h1 className="text-xl font-bold">John Doe</h1>
+            <h1 className="text-xl font-bold">{userData?.response?.username}</h1>
             <p className="text-gray-700">Software Developer</p>
             <div className="mt-6 flex flex-wrap gap-4 justify-center">
               <a
                 href="#"
                 className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
               >
-                Contact
+                Edit
               </a>
               <a
                 href="#"
                 className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded"
               >
-                Resume
+                   change password 
               </a>
             </div>
           </div>
@@ -51,12 +117,11 @@ function UserProfile() {
 
         </div>
       </div>
+
       <div className="col-span-4 sm:col-span-9">
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">About Me</h2>
-          <p className="text-gray-700">
-         
-          </p>
+          <h2 className="text-xl font-bold mb-4">Personal info</h2>
+          <p className="text-gray-700"> </p>
        
           {/* <div className="flex justify-center items-center gap-6 my-6">
             <a
@@ -145,21 +210,80 @@ function UserProfile() {
               </svg>
             </a>
           </div> */}
+          <div className='flex justify-between'>
+              <div>
+              <h2 className="text-xl font-bold mt-6 mb-4">username  </h2>
+          <span>{userData?.response?.username}</span>
+              </div>
+               <div className=' pe-40 mt-10'>
+               <Popover className={`${showPopover?"hidden":null}`}>
+              <PopoverTrigger  >
+              <button  onClick={handlePopoverOpen}className="text-blue-500">Edit</button>
+                </PopoverTrigger>
+              <PopoverContent  >
+                 
+               <Input type="email" value={edit.username}  onChange={(e) => inputChange(e, "username")}/> 
+                 
+               <button  onClick={()=>{
+                editUserDetails({name:edit.username,id:user.user._id})
+                onClick={handlePopoverClose}
+                } } className="text-blue-500"> submit</button>
+                </PopoverContent> 
+              </Popover>
+               </div>
+               
+          </div>
+          <div className='flex justify-between'>
+              <div>
+              <h2 className="text-xl font-bold mt-6 mb-4">Email  </h2>
+              <span>{userData?.response?.email} </span> 
+              </div>
+               
+               <div  className='pe-40 mt-10'>
+               <Popover>
+              <PopoverTrigger>
+              <button className="text-blue-500">Edit</button>
+                </PopoverTrigger>
+              <PopoverContent  >
+                 
+               <Input type="email"  value={edit.email} onChange={(e) => inputChange(e, "email")}  /> 
+               <button onClick={()=>{editUserDetails({email:edit.email,id:user.user._id})}} className="text-blue-500"> submit</button>
+                </PopoverContent> 
+              </Popover>
+               </div>
+               
+          </div>
+
+        
+          <div className='flex justify-between'>
+              <div>
+              <h2 className="text-xl font-bold mt-6 mb-4">password</h2>
+                <span>*******</span>
+              </div>
+              <div  className='pe-40 mt-10'>
+               <Popover>
+              <PopoverTrigger>
+                
+              <button className="text-blue-500">Edit</button>
+                </PopoverTrigger>
+              <PopoverContent  >
+                 
+               <Input type="email" value={edit.password} onChange={(e) => inputChange(e, "password")} /> 
+                       
+               <button  onClick={()=>{editUserDetails({id:user.user._id,password:edit.password})}} className="text-blue-500"> submit</button>
+               
+                </PopoverContent> 
+              </Popover>
+               </div>
+          </div>
 
 
 
-
-
-
-
-
-
-
-          <h2 className="text-xl font-bold mt-6 mb-4">Experience</h2>
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <div className="flex justify-between flex-wrap gap-2 w-full">
-              <span className="text-gray-700 font-bold">Web Developer</span>
+              <span className="text-gray-700 font-bold">email</span>
               <p>
+           <div className=''>{userData?.response?.email} </div>
                 <span className="text-gray-700 mr-2">at ABC Company</span>
                 <span className="text-gray-700">2017 - 2019</span>
               </p>
@@ -167,7 +291,22 @@ function UserProfile() {
             <p className="mt-2">
              
             </p>
-          </div>
+          </div> */}
+
+{/* 
+          <div className="mb-6">
+            <div className="flex justify-between flex-wrap gap-2 w-full">
+              <span className="text-gray-700 font-bold">Web Developer</span>
+              <p>
+                <span className="text-gray-700 mr-2">at ABC Company</span>
+                <span className="text-gray-700">2017 - 2019</span>
+              </p>
+            </div>
+            <p className="mt-2">
+            </p>
+          </div> */}
+
+{/* 
           <div className="mb-6">
             <div className="flex justify-between flex-wrap gap-2 w-full">
               <span className="text-gray-700 font-bold">Web Developer</span>
@@ -179,43 +318,14 @@ function UserProfile() {
             <p className="mt-2">
               
             </p>
-          </div>
-          <div className="mb-6">
-            <div className="flex justify-between flex-wrap gap-2 w-full">
-              <span className="text-gray-700 font-bold">Web Developer</span>
-              <p>
-                <span className="text-gray-700 mr-2">at ABC Company</span>
-                <span className="text-gray-700">2017 - 2019</span>
-              </p>
-            </div>
-            <p className="mt-2">
-              
-            </p>
-          </div>
+          </div> */}
+
         </div>
       </div>
     </div>
   </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
-    </div>
+</div>   
+ </div>
   )
 }
 
