@@ -34,6 +34,7 @@ const user= require('./src/api/routes/userRoutes')
 const authRouter=require('./src/api/routes/authenticationRoutes')
 const hotelRouter=require("./src/api/routes/hotelRoutes")
 const adminRouter=require("./src/api/routes/adminRoutes")
+const bookingRouter=require("./src/api/routes/bookingRoutes")
 
 //app.get('/users',(req,res)=>{res.json({users:["liju","philip"]})})
 
@@ -41,6 +42,7 @@ app.use('/',user)
 app.use('/auth',authRouter)
 app.use("/hotel",hotelRouter)
 app.use("/admin",adminRouter)
+app.use("/booking",bookingRouter)
 
 
 

@@ -1,4 +1,4 @@
-const{fetchAllUsersHelper,findUserHelper, getAllHotelsHelper,statusHelper} =require("../helpers/userHelper")
+const{fetchAllUsersHelper,findUserHelper, getAllHotelsHelper,statusHelper,editUserHelper,getSingleHotelHelper} =require("../helpers/userHelper")
 
 
 const getAllUsers= async(req,res,next)=>{
@@ -12,6 +12,8 @@ const getAllUsers= async(req,res,next)=>{
 }
 
 const getUserDetailsForProfile=async(req,res,next)=>{
+          console.log("getUserDetailsForProfile")
+          console.log(req.params)
          try{
             const user_id=req.params.user_id
             const response=await findUserHelper(user_id)
@@ -52,12 +54,63 @@ const statusChange= async(req,res)=>{
 }
 
 
+const editUser= async(req,res)=>{
+
+ try {
+  const data= req.body
+  console.log(req.body)
+  const response= await editUserHelper(data)
+         console.log(response)
+      res.status(200).json({response})
+  
+ } catch (error) {
+   console.log(error)
+  res.status(401).json({message:error})
+ }
+
+}
+
+
+const getSingleHotel= async(req,res)=>{
+   try {
+        const id= req.params.id
+        const response= await  getSingleHotelHelper(id)
+      
+         res.status(200).json(response)
+   } catch (error) {
+     res.status(400).json({message:"invalid hotel id"})
+    
+   }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports={
     getAllUsers,
     getUserDetailsForProfile,
     getAllHotels,
-    statusChange
+    statusChange,
+    editUser,
+    getSingleHotel
 
 
 }
